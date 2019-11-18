@@ -1,0 +1,264 @@
+{
+	"id": "811162bd-8e34-c5c5-6a33-67692e6fb40a",
+	"name": "webapi_test",
+	"allTests": [],
+	"timestamp": 1512964274675,
+	"collection_id": "7a8aab5d-7cd2-de2d-fecb-60cce2136e8c",
+	"folder_id": 0,
+	"target_type": "collection",
+	"environment_id": "0",
+	"data": [],
+	"delay": 0,
+	"count": 1,
+	"collection": {
+		"id": "7a8aab5d-7cd2-de2d-fecb-60cce2136e8c",
+		"name": "webapi_test",
+		"description": "",
+		"order": [
+			"a5b63fdb-e0d8-4945-b119-9601f50f625a",
+			"61d88a07-f726-ea3f-f573-822f84c54186",
+			"9777fbde-e1d7-8beb-c367-ba6f9b9b66b2"
+		],
+		"folders": [],
+		"folders_order": [],
+		"requests": [
+			{
+				"id": "61d88a07-f726-ea3f-f573-822f84c54186",
+				"headers": "Content-Type: application/json\n",
+				"headerData": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": "",
+						"enabled": true
+					}
+				],
+				"url": "http://localhost:3000/api/products",
+				"queryParams": [],
+				"pathVariables": {},
+				"pathVariableData": [],
+				"preRequestScript": null,
+				"method": "POST",
+				"collectionId": "7a8aab5d-7cd2-de2d-fecb-60cce2136e8c",
+				"data": "{\"title\": \"producto_02\", \"price\": 20.20}",
+				"dataMode": "raw",
+				"name": "insert_product_02",
+				"description": "",
+				"descriptionFormat": "html",
+				"time": 1512964232135,
+				"version": 2,
+				"responses": [],
+				"tests": null,
+				"currentHelper": "normal",
+				"helperAttributes": {}
+			},
+			{
+				"id": "9777fbde-e1d7-8beb-c367-ba6f9b9b66b2",
+				"headers": "Content-Type: application/json\n",
+				"headerData": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": "",
+						"enabled": true
+					}
+				],
+				"url": "http://localhost:3000/api/products",
+				"queryParams": [],
+				"pathVariables": {},
+				"pathVariableData": [],
+				"preRequestScript": null,
+				"method": "GET",
+				"collectionId": "7a8aab5d-7cd2-de2d-fecb-60cce2136e8c",
+				"data": "{\"title\": \"producto_02\", \"price\": 20.20}",
+				"dataMode": "raw",
+				"name": "show_products",
+				"description": "",
+				"descriptionFormat": "html",
+				"time": 1512964266087,
+				"version": 2,
+				"responses": [],
+				"tests": null,
+				"currentHelper": "normal",
+				"helperAttributes": {}
+			},
+			{
+				"id": "a5b63fdb-e0d8-4945-b119-9601f50f625a",
+				"headers": "Content-Type: application/json\n",
+				"headerData": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": "",
+						"enabled": true
+					}
+				],
+				"url": "http://localhost:3000/api/products",
+				"queryParams": [],
+				"pathVariables": {},
+				"pathVariableData": [],
+				"preRequestScript": null,
+				"method": "POST",
+				"collectionId": "7a8aab5d-7cd2-de2d-fecb-60cce2136e8c",
+				"data": "{\"title\": \"producto_01\", \"price\": 10.10}",
+				"dataMode": "raw",
+				"name": "insert_product_01",
+				"description": "",
+				"descriptionFormat": "html",
+				"time": 1512964214106,
+				"version": 2,
+				"responses": [],
+				"tests": null,
+				"currentHelper": "normal",
+				"helperAttributes": {}
+			}
+		],
+		"timestamp": 1512964211976,
+		"synced": false,
+		"syncedFilename": "",
+		"remote_id": 0,
+		"remoteLink": "",
+		"remoteLinkUpdatedAt": null,
+		"public": false,
+		"owner": 0,
+		"subscribed": false,
+		"createdAt": 1512964211976,
+		"updatedAt": 1512964266130,
+		"write": true,
+		"published": false,
+		"favorite": false,
+		"permissions": {},
+		"syncedPermissions": {},
+		"sharedWithTeam": false
+	},
+	"folder": null,
+	"environment": null,
+	"globals": [],
+	"results": [
+		{
+			"id": "a5b63fdb-e0d8-4945-b119-9601f50f625a",
+			"name": "insert_product_01",
+			"url": "http://localhost:3000/api/products",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				168
+			],
+			"allTests": [
+				{}
+			],
+			"time": 168,
+			"totalRequestTime": 168,
+			"iterationResults": {}
+		},
+		{
+			"id": "61d88a07-f726-ea3f-f573-822f84c54186",
+			"name": "insert_product_02",
+			"url": "http://localhost:3000/api/products",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				168
+			],
+			"allTests": [
+				{}
+			],
+			"time": 168,
+			"totalRequestTime": 168,
+			"iterationResults": {}
+		},
+		{
+			"id": "9777fbde-e1d7-8beb-c367-ba6f9b9b66b2",
+			"name": "show_products",
+			"url": "http://localhost:3000/api/products",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				169
+			],
+			"allTests": [
+				{}
+			],
+			"time": 169,
+			"totalRequestTime": 169,
+			"iterationResults": {}
+		}
+	],
+	"totalPass": 0,
+	"totalFail": 0,
+	"totalTime": 505,
+	"lifecycle": "done",
+	"willStop": false,
+	"requests": [
+		{
+			"name": "insert_product_01",
+			"id": "a5b63fdb-e0d8-4945-b119-9601f50f625a",
+			"url": "http://localhost:3000/api/products",
+			"time": 168,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+			},
+			"testPassFailCounts": {},
+			"gridTitles": [],
+			"gridData": [
+				[]
+			],
+			"tests": {}
+		},
+		{
+			"name": "insert_product_02",
+			"id": "61d88a07-f726-ea3f-f573-822f84c54186",
+			"url": "http://localhost:3000/api/products",
+			"time": 168,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+			},
+			"testPassFailCounts": {},
+			"gridTitles": [],
+			"gridData": [
+				[]
+			],
+			"tests": {}
+		},
+		{
+			"name": "show_products",
+			"id": "9777fbde-e1d7-8beb-c367-ba6f9b9b66b2",
+			"url": "http://localhost:3000/api/products",
+			"time": 169,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+			},
+			"testPassFailCounts": {},
+			"gridTitles": [],
+			"gridData": [
+				[]
+			],
+			"tests": {}
+		}
+	],
+	"synced": false
+}

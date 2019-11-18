@@ -1,0 +1,18 @@
+{
+  "name": "lol-shop-api",
+  "version": "1.0.0",
+  "description": "League of Legend shop API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Han Jung",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.0",
+    "express": "^4.15.4",
+    "mongoose": "^4.11.11",
+    "nodemon": "^1.12.0"
+  }
+}
