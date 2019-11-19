@@ -1,7 +1,5 @@
 FROM alpine
-
-RUN apk update
-RUN apk add --no-cache --update nodejs
-RUN apk add --no-cache --update nodejs-npm
-
+# update so and install nodejs
+RUN apk update && apk add --no-cache nodejs nodejs-npm
+# homedir
 WORKDIR /app

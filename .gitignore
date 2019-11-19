@@ -1,0 +1,6 @@
+sonar-scanner/
+.scannerwork
+node_modules/
+package-lock.json
+.config/
+.npm/

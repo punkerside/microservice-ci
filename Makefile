@@ -1,56 +1,71 @@
-OWNER   = punkerside
-PROJECT = api
+OWNER      = punkerside
+PROJECT    = api
+ENV        = dev
 
-TAG_CLI = base
-TAG_API = web
-TAG_DB  = db
+AWS_REGION = us-east-1
+AWS_ZONE_A = $(shell aws ec2 describe-availability-zones --region $(AWS_REGION) --query 'AvailabilityZones[*].[ZoneName]' --filters "Name=state,Values=available" --output text | sed '1!d')
+AWS_ZONE_B = $(shell aws ec2 describe-availability-zones --region $(AWS_REGION) --query 'AvailabilityZones[*].[ZoneName]' --filters "Name=state,Values=available" --output text | sed '2!d')
+KUBECONFIG = "$(HOME)/.kube/eksctl/clusters/$(PROJECT)-$(ENV)"
 
-images:
-	@make imagecli
-	@make imagedb
-	@make imageapi
+WHOAMI  = $(shell whoami)
+USERID  = $(shell id -u)
+VERSION = $(shell date '+%y%m%d%H%M')
 
-imagecli:
-	docker build -f docker/base/Dockerfile -t $(OWNER)-$(PROJECT):$(TAG_CLI) .
 
-imagedb:
-	docker build -f docker/mongodb/Dockerfile -t $(OWNER)-$(PROJECT):$(TAG_DB) .
+image-base:
+	docker build -f docker/base/Dockerfile -t $(PROJECT)-$(ENV):base .
 
-imageapi:
-	docker build -f docker/nodejs/Dockerfile -t $(OWNER)-$(PROJECT):$(TAG_API) .
+image-build:
+	docker build -f docker/build/Dockerfile --build-arg IMAGE=$(PROJECT)-$(ENV):base -t $(PROJECT)-$(ENV):build .
 
-modules:
-	$(eval WHOAMI = $(shell whoami))
-	$(eval USERID = $(shell id -u))
-	echo 'USERNAME:x:USERID:USERID::/app:/sbin/nologin' > docker/base/passwd
-	sed -i 's/USERNAME/$(WHOAMI)/g' docker/base/passwd
-	sed -i 's/USERID/$(USERID)/g' docker/base/passwd
-	docker run --rm -u $(USERID):$(USERID) -v $(PWD)/docker/base/passwd:/etc/passwd:ro -v $(PWD)/app:/app $(OWNER)-$(PROJECT):$(TAG_CLI) npm install
-	rm -rf app/.config/ && rm -rf app/.npm/
+image-app:
+	docker build -f docker/app/Dockerfile --build-arg IMAGE=$(PROJECT)-$(ENV):base -t $(PROJECT)-$(ENV):app .
 
-sonar:
-	./bin/sonar-scanner/bin/sonar-scanner \
-	  -Dsonar.projectKey=punkerside_microservice \
+code-scanner:
+	curl -o sonar-scanner-cli-4.2.0.1873-linux.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
+	unzip sonar-scanner-cli-4.2.0.1873-linux.zip && mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner/ && rm -rf sonar-scanner-cli-4.2.0.1873-linux.zip
+	./sonar-scanner/bin/sonar-scanner \
+	  -Dsonar.projectKey=microservice-ci \
 	  -Dsonar.organization=punkerside-github \
 	  -Dsonar.sources=./app/ \
 	  -Dsonar.host.url=https://sonarcloud.io \
-	  -Dsonar.login=$(SONAR_TOKEN)
+	  -Dsonar.login=bc177829f542354dec2c8d06741a7790551fd926
 
-postman:
+code-build:
+	echo 'USERNAME:x:USERID:USERID::/app:/sbin/nologin' > docker/build/passwd
+	sed -i 's/USERNAME/$(WHOAMI)/g' docker/build/passwd && sed -i 's/USERID/$(USERID)/g' docker/build/passwd
+	docker run --rm -u $(USERID):$(USERID) -v $(PWD)/docker/build/passwd:/etc/passwd:ro -v $(PWD)/app:/app $(PROJECT)-$(ENV):build
+	rm -rf app/.config/ app/.npm/
+
+code-test:
 	docker-compose up -d && sh test/wait.sh
 	newman run test/data/webapi_test.postman_test_run --reporters cli
 	docker-compose down
 
-publish:
-	$(eval VERSION = $(shell date '+%Y%m%d%H%M%S'))
-	@make imageapi
-	docker tag $(OWNER)-$(PROJECT):$(TAG_API) punkerside/microservice:latest
-	docker tag $(OWNER)-$(PROJECT):$(TAG_API) punkerside/microservice:$(VERSION)
-	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
-	docker push punkerside/microservice:latest
-	docker push punkerside/microservice:$(VERSION)
-	@make update VERSION=$(VERSION)
+image-push:
+	echo "nublado951" | docker login -u "$(OWNER)" --password-stdin
+	docker tag $(PROJECT)-$(ENV):app $(OWNER)/$(PROJECT)-$(ENV):latest && docker push $(OWNER)/$(PROJECT)-$(ENV):latest
+	docker tag $(PROJECT)-$(ENV):app $(OWNER)/$(PROJECT)-$(ENV):$(VERSION) && docker push $(OWNER)/$(PROJECT)-$(ENV):$(VERSION)
 
-update:
-	aws eks --region $(AWS_REGION) update-kubeconfig --name $(EKS_CLUSTER)
-	kubectl set image deployments/coffee coffee=punkerside/microservice:$(VERSION)
+k8s-create-cluster:
+	eksctl create cluster \
+	  --name $(PROJECT)-$(ENV) \
+	  --region $(AWS_REGION) \
+	  --zones=$(AWS_ZONE_A),$(AWS_ZONE_B) \
+	  --version 1.14 \
+	  --node-type t3a.medium \
+	  --nodes 2 \
+	  --auto-kubeconfig
+
+k8s-ingress:
+	kubectl --kubeconfig $(KUBECONFIG) apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
+	kubectl --kubeconfig $(KUBECONFIG) apply -f k8s/service-l7.yaml
+	kubectl --kubeconfig $(KUBECONFIG) apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/aws/patch-configmap-l7.yaml
+
+k8s-create-service:
+	kubectl --kubeconfig $(KUBECONFIG) apply -f k8s/create/deployment.yaml
+	export IMAGE=$(OWNER)/$(PROJECT)-$(ENV):latest && envsubst < k8s/service.yaml | kubectl --kubeconfig $(KUBECONFIG) apply -f -
+	kubectl --kubeconfig $(KUBECONFIG) apply -f k8s/create/ingress.yaml
+
+k8s-create-update:
+	kubectl --kubeconfig $(KUBECONFIG) set image deployments/api api=$(OWNER)/$(PROJECT)-$(ENV):latest

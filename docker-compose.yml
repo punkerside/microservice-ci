@@ -2,7 +2,7 @@ version: "3"
 
 services:
   web:
-    image: punkerside-api:web
+    image: ${PROJECT}-${ENV}:app
     volumes:
       - ./app:/app
     ports:
@@ -11,4 +11,5 @@ services:
     depends_on:
       - mongo
   mongo:
-    image: punkerside-api:db
+    image: mongo
+    restart: always
