@@ -11,7 +11,6 @@ WHOAMI  = $(shell whoami)
 USERID  = $(shell id -u)
 VERSION = $(shell date '+%y%m%d%H%M')
 
-
 image-base:
 	docker build -f docker/base/Dockerfile -t $(PROJECT)-$(ENV):base .
 
