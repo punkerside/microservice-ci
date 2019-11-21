@@ -42,7 +42,7 @@ code-test:
 	docker-compose down
 
 image-push:
-	echo "nublado951" | docker login -u "$(OWNER)" --password-stdin
+	echo "password" | docker login -u "$(OWNER)" --password-stdin
 	docker tag $(PROJECT)-$(ENV):app $(OWNER)/$(PROJECT)-$(ENV):latest && docker push $(OWNER)/$(PROJECT)-$(ENV):latest
 	docker tag $(PROJECT)-$(ENV):app $(OWNER)/$(PROJECT)-$(ENV):$(VERSION) && docker push $(OWNER)/$(PROJECT)-$(ENV):$(VERSION)
 
